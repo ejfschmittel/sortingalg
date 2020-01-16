@@ -1,0 +1,19 @@
+.sort-display{
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    height: 100%;
+    align-items: flex-end;
+}
+
+
+.sort-display__item{
+    flex: 1;
+    border: 1px solid #fff;
+    margin: 0 1px;
+
+    &--no-border{
+        border: none;
+    }
+}
+
