@@ -4,10 +4,6 @@ import {SORT_ALGORITHMS} from "../algorithms"
 import CustomRangeInput from "./CustomRangeInput/CustomRangeInput.component"
 
 
-
-
-
-
 const SortingAlgorithmSelect = React.memo(({value, onChange}) => {
   return (
     <select name="sortingAlgorithm" onChange={onChange} value={value}>
@@ -19,7 +15,6 @@ const SortingAlgorithmSelect = React.memo(({value, onChange}) => {
     </select>
   )
 })
-
 
 
 const Menu = React.memo(({isShowingIntro, onStart, onStop, isRunning, show, setShow, onOptionsChange, options: {sortingAlgorithm, count, speed}}) => {

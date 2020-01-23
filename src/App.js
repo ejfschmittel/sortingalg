@@ -4,7 +4,7 @@ import {SORT_ALGORITHMS, getSortingAlgorithm} from "./algorithms"
 // components
 import Menu from "./components/Menu.component.jsx";
 import SortingDisplay from "./components/SortingDisplay.component.jsx"
-import IntroModal from "./components/IntroModal.component";
+import IntroModal from "./components/IntroModal/IntroModal.component";
 
 // hooks
 import useInterval from "./hooks/useInterval";

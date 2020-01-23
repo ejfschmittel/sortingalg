@@ -20,51 +20,7 @@
     position: relative;
 }
 
-.intro{
-    position: absolute;
-    top: 50%;   
-    visibility: hidden;
-    transform: translateY(-70%);
-    opacity: 0;
-    transition: all .5s ease-in-out;
-    color: #fff;
-    width: 90%;
-    max-width: 500px;
-    text-align: center;
-    background: rgba(33,33,33, 0.8);
-    padding: 3rem;
-    border-radius: 1rem;
-    margin: 0 auto;
-    z-index: 5;
 
-    
-
-}
-
-.intro--show{
-    visibility: visible;
-    transform: translateY(-50%);
-    opacity: 1;
-}
-
-.intro__headline{
-    font-size: 3rem;
-    color: #fff;
-    margin-bottom: .5rem;
-
-    @media screen and (max-width: 800px) {
-        font-size: 2rem;
-    }
-}
-
-.intro__description{
-    line-height: 1.6rem;
-
-    @media screen and (max-width: 800px) {
-        font-size: .9rem;
-        line-height: 1.4rem;
-    }
-}
 
 html, body, #root, .App {
     height: 100%;
