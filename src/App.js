@@ -1,13 +1,17 @@
 import React, {useState, useCallback} from 'react';
+import {SORT_ALGORITHMS, getSortingAlgorithm} from "./algorithms"
 
-import './scss/main.scss'
-import Menu from "./components/menu.component.jsx";
-import SortDisplay from "./components/sortDisplay.component.jsx"
+// components
+import Menu from "./components/Menu.component.jsx";
+import SortingDisplay from "./components/SortingDisplay.component.jsx"
+import IntroModal from "./components/IntroModal.component";
 
+// hooks
 import useInterval from "./hooks/useInterval";
 import useArray from "./hooks/useArray";
 
-import {SORT_ALGORITHMS, getSortingAlgorithm} from "./algorithms"
+// scss
+import './scss/main.scss'
 
 
 const MAX_VALUE = 500;
@@ -118,6 +122,7 @@ const App = () => {
   return (
     <div className="App">
       <div className="main-container">
+
         <Menu 
           show={showMenu}
           setShow={setShowMenu} 
@@ -128,30 +133,25 @@ const App = () => {
           isShowingIntro={showIntro}
           onStop={stopSorting}
           />
+
         <div className="content">
 
-
-          {/* intro */}
-          <IntroDisplay 
+          <IntroModal 
             options={options}
             showIntro={showIntro && isRunning}
             />
  
+          <SortingDisplay 
+            items={array} 
+            /> 
 
-          <SortDisplay items={array} />
-          
         </div>
       </div>
     </div>
   );
 }
 
-const IntroDisplay = ({options, showIntro}) => (
-  <div className={showIntro ? "intro intro--show" : "intro"}>
-    <h2 className="intro__headline">{options.sortingAlgorithm.display_name}</h2>
-    <p className="intro__description">{options.sortingAlgorithm.description}</p>
-  </div>
-)
+
 
 
 export default App;
