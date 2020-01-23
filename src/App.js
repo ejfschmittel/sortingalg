@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import {SORT_ALGORITHMS, getSortingAlgorithm} from "./algorithms"
 
 // components
@@ -30,12 +30,18 @@ const defaultOptions = {
 const App = () => {
   const [options, setOptions] = useState(defaultOptions)
 
+  const [arrayTimeout, setArrayTimeout ] = useState(0)
+
   const {
     array,
     setArray,
     shuffleArray,
     resizeArray,
   } = useArray(options)
+
+  useEffect(() => {
+    console.log(options.count)
+  }, [options])
 
   const [showMenu, setShowMenu] = useState(true); 
 
@@ -74,7 +80,7 @@ const App = () => {
  
     if(name === "count"){
       stopSorting();
-      resizeArray(value);
+      delayedArrayResize(value);
     } 
 
     const newObject = {
@@ -83,6 +89,16 @@ const App = () => {
     }
 
     setOptions({...newObject})
+  }
+
+  const delayedArrayResize = (count) => {
+    if(arrayTimeout){
+      clearTimeout(arrayTimeout)
+    }
+
+    setArrayTimeout(setTimeout(() => {
+      resizeArray(count)      
+    }, 500))
   }
 
   const startSorting = useCallback(() => {

@@ -2,7 +2,7 @@ import {useState, useCallback, useEffect} from "react";
 
 const useArray = (options) => {
     const [array, setArray] = useState([]);
-    const [arrayTimeout, setArrayTimeout ] = useState(0)
+    //const [arrayTimeout, setArrayTimeout ] = useState(0)
 
 
     useEffect(() => {
@@ -31,7 +31,7 @@ const useArray = (options) => {
   
    
     // resizes the array: count = new size
-    const resizeArray = (count) => {
+    /*const resizeArray = (count) => {
       if(arrayTimeout){
         clearTimeout(arrayTimeout)
       }
@@ -40,6 +40,11 @@ const useArray = (options) => {
         const newArray = getValueArray(count, options.steps);
         setArray(newArray)      
       }, 500))
+    }*/
+
+    const resizeArray = (count) => {
+      const newArray = getValueArray(count, options.steps);
+      setArray(newArray)  
     }
   
     return  {

@@ -1,18 +1,10 @@
 import React, {useState, useMemo, useCallback} from "react";
 import {SORT_ALGORITHMS} from "../algorithms"
 
+import CustomRangeInput from "./CustomRangeInput/CustomRangeInput.component"
 
-const CustomRangeInput = React.memo(({value, max, label, name, ...otherProps}) => {
-  const displayOffset =  useMemo(() => (value / max) * 100, [value, max]);
-  
-  return (
-    <div className="custom-slider">
-      <label for={name}>{label}</label>
-      <input type="range" {...otherProps} value={value} max={max} name={name} />
-      <div style={{left: `${displayOffset}%`}}>{value}</div>
-    </div>
-  )
-})
+
+
 
 
 
@@ -67,7 +59,7 @@ const Menu = React.memo(({isShowingIntro, onStart, onStop, isRunning, show, setS
                 step="10" 
                 onChange={onOptionsChange} 
                 name="count"
-                label="columns"
+                label={`columns: ${count}`}
                 />
 
               <CustomRangeInput 
@@ -77,7 +69,7 @@ const Menu = React.memo(({isShowingIntro, onStart, onStop, isRunning, show, setS
                 step="10"  
                 onChange={onOptionsChange} 
                 name="speed"
-                label="delay"
+                label={`delay: ${speed} ms`}
                 />
 
 
