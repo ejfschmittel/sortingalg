@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useRef, useState, useCallback, useEffect} from 'react';
 import {SORT_ALGORITHMS, getSortingAlgorithm} from "./algorithms"
 
 // components
@@ -14,7 +14,11 @@ import useArray from "./hooks/useArray";
 import './App.scss'
 
 
-const MAX_VALUE = 500;
+
+
+const MAX_COLUMNS_LARGE = 500;
+const MAX_COLUMNS_MEDIUM = 200;
+const MAX_COLUMNS_SMALL = 100;
 // https://github.com/rafeautie/sorting-algorithm-visualizer
 // https://github.com/decadentjs/sorting-algorithms/blob/master/src/sorter.js+
 
@@ -24,13 +28,49 @@ const defaultOptions = {
   count: 50,
   steps: 1,
   speed: 200, //ms
+  max_columns: MAX_COLUMNS_LARGE,
 }
 
+
+
+
+const useResizeEventListener = (callback, callbackDependencies = []) => {
+  const savedCallback = useRef();
+
+    useEffect(() => {
+      window.addEventListener('resize', callback);
+      return () => {
+        window.removeEventListener('resize', callback);
+      };
+    }, [])
+  
+    // Remember the latest callback.
+    useEffect(() => {
+      savedCallback.current = callback;
+    }, [callback]);
+  
+    useEffect(() => {
+      if (callbackDependencies !== null && callbackDependencies.length !== 0) {
+        window.addEventListener('resize', callback);
+        return () => {
+          window.removeEventListener('resize', callback);
+        };
+      }
+    }, callbackDependencies);
+    
+}
 
 const App = () => {
   const [options, setOptions] = useState(defaultOptions)
 
   const [arrayTimeout, setArrayTimeout ] = useState(0)
+
+  const [showMenu, setShowMenu] = useState(true); 
+
+  const [isRunning, setIsRunning] = useState(false);
+  const [showIntro, setShowIntro] = useState(false);
+  const [isSortingRunning, setIsSortingRunning] = useState(false)
+  const [generator, setGenerator] = useState(null);
 
   const {
     array,
@@ -39,16 +79,27 @@ const App = () => {
     resizeArray,
   } = useArray(options)
 
-  useEffect(() => {
-    console.log(options.count)
+  useResizeEventListener(() => {
+    if(window.innerWidth >= 1600){
+      updateMaxColumns(MAX_COLUMNS_LARGE)
+        
+    }else if(window.innerWidth >= 800){
+      updateMaxColumns(MAX_COLUMNS_MEDIUM)
+        
+    }else{
+      updateMaxColumns(MAX_COLUMNS_SMALL)
+    }
   }, [options])
 
-  const [showMenu, setShowMenu] = useState(true); 
 
-  const [isRunning, setIsRunning] = useState(false);
-  const [showIntro, setShowIntro] = useState(false);
-  const [isSortingRunning, setIsSortingRunning] = useState(false)
-  const [generator, setGenerator] = useState(null);
+  const updateMaxColumns = (max_size) => {
+    if(options.max_columns !== max_size){
+      const count = options.count > max_size ? max_size : options.count;
+      setOptions({...options, max_columns: max_size, count})
+      resizeArray(count);
+    }
+  }
+
 
 
   // main loop for sorting

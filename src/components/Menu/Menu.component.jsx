@@ -19,7 +19,7 @@ const SortingAlgorithmSelect = React.memo(({value, onChange}) => {
 })
 
 
-const Menu = React.memo(({isShowingIntro, onStart, onStop, isRunning, show, setShow, onOptionsChange, options: {sortingAlgorithm, count, speed}}) => {
+const Menu = React.memo(({isShowingIntro, onStart, onStop, isRunning, show, setShow, onOptionsChange, options: {sortingAlgorithm, count, speed, max_columns}}) => {
   const toggleShow = useCallback(() => setShow(!show), [show]);
 
 
@@ -52,7 +52,7 @@ const Menu = React.memo(({isShowingIntro, onStart, onStop, isRunning, show, setS
               <CustomRangeInput 
                 value={count} 
                 min="10" 
-                max="500" 
+                max={max_columns}
                 step="10" 
                 onChange={onOptionsChange} 
                 name="count"
