@@ -1,87 +1,21 @@
-import React, {useState, useEffect, useCallback, useRef} from 'react';
+import React, {useState, useCallback} from 'react';
+
 import './scss/main.scss'
 import Menu from "./components/menu.component.jsx";
 import SortDisplay from "./components/sortDisplay.component.jsx"
 
+import useInterval from "./hooks/useInterval";
+import useArray from "./hooks/useArray";
+
 import {SORT_ALGORITHMS, getSortingAlgorithm} from "./algorithms"
-// show menu
-// set menu options
 
 
-// https://khan4019.github.io/front-end-Interview-Questions/sort.html
-// https://usehooks.com/
-
-// build a slider vor the max (500)
 const MAX_VALUE = 500;
-
-
-/*
-
-
- // => function animdates in normal loop
-
-
-
-*/
-
-
-
-
-
-
-
-function useInterval(callback, delay) {
-  const savedCallback = useRef();
-
-  // Remember the latest callback.
-  useEffect(() => {
-    savedCallback.current = callback;
-  }, [callback]);
-
-  // Set up the interval.
-  useEffect(() => {
-    function tick() {
-      savedCallback.current();
-    }
-    if (delay !== null) {
-      let id = setInterval(tick, delay);
-      return () => clearInterval(id);
-    }
-  }, [delay]);
-}
-
-
-/*
-pos says where items gets displayed.
-so to scramble the pos needs to be updated
-
-change to object ( for rendering
-  value: pos
-)
-
-update array = [just the value]
-=> update value_array
-=> update pos in display object
-=> 
-
-
-
-*/
-
-// https://stackoverflow.com/questions/53024496/state-not-updating-when-using-react-state-hook-within-setinterval
-// https://overreacted.io/making-setinterval-declarative-with-react-hooks/
-// https://medium.com/@dan_abramov
-
-/*
-  on central array,
-  () => gets manipulated and updated
-
-
-*/
-
 // https://github.com/rafeautie/sorting-algorithm-visualizer
-// https://github.com/decadentjs/sorting-algorithms/blob/master/src/sorter.js
-const initialOptions = {
+// https://github.com/decadentjs/sorting-algorithms/blob/master/src/sorter.js+
+
+
+const defaultOptions = {
   sortingAlgorithm: SORT_ALGORITHMS.HEAP_SORT,
   count: 50,
   steps: 1,
@@ -89,66 +23,17 @@ const initialOptions = {
 }
 
 
-// add max count
-const getValueArray = (count, steps) => {
-  let arr = [];
-  for(let i = steps; i <= count; i += steps){
-    arr.push(i);
-  }
-  return arr;
-}
-
-const initialArray = getValueArray(initialOptions.count, initialOptions.steps);
-
-
-const useArray = (initialArray) => {
-  const [array, setArray] = useState(initialArray);
-  const [arrayTimeout, setArrayTimeout ] = useState(0)
-
-  // randomly shuffles the array
-  const shuffleArray = useCallback(() => {
-    let a = array;
-    for (let i = a.length - 1; i > 0; i--) { 
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
-    }
-    setArray([...a]);
-  }, [array])
-
-  /* resizes array: count = new size */
-  const resizeArray = (count) => {
-    if(arrayTimeout){
-      clearTimeout(arrayTimeout)
-    }
-
-    setArrayTimeout(setTimeout(() => {
-      const newArray = getValueArray(count, initialOptions.steps);
-      setArray(newArray)      
-    }, 500))
-  }
-
-  return  {
-    array,
-    setArray,
-    shuffleArray,
-    resizeArray
-  }
-}
-
-
-
 const App = () => {
+  const [options, setOptions] = useState(defaultOptions)
 
   const {
     array,
     setArray,
     shuffleArray,
     resizeArray,
-  } = useArray(initialArray)
+  } = useArray(options)
 
   const [showMenu, setShowMenu] = useState(true); 
-  
-  const [options, setOptions] = useState(initialOptions)
 
   const [isRunning, setIsRunning] = useState(false);
   const [showIntro, setShowIntro] = useState(false);
@@ -156,7 +41,8 @@ const App = () => {
   const [generator, setGenerator] = useState(null);
 
 
-  /* main loop */
+  // main loop for sorting
+  // calls generator sorting function to get next array 
   useInterval(() => {
    
     if(generator && isRunning){
@@ -166,31 +52,24 @@ const App = () => {
         const newArray = res.value;  
         setArray([...newArray]);
       }else{
-        stop();
+        stopSorting();
       }
     }else{
-      stop();
+      stopSorting();
     }
-    
   }, isSortingRunning ? options.speed : null)
 
-
-  const stop = () => {
-    setIsSortingRunning(false);
-    setIsRunning(false);
-    setShowIntro(false);
-    setGenerator(null);
-  }
-
+  // on Change function for options
   const onOptionsChange = (e) => {
     let {name, value} = e.target
    
     if(name === "sortingAlgorithm"){
+      stopSorting();
       value = SORT_ALGORITHMS[value.toUpperCase()]
     }
  
     if(name === "count"){
-      stop();
+      stopSorting();
       resizeArray(value);
     } 
 
@@ -202,7 +81,7 @@ const App = () => {
     setOptions({...newObject})
   }
 
-  const onStart = useCallback(() => {
+  const startSorting = useCallback(() => {
     // hide menu / start intro / set running
     setShowMenu(false);
     setShowIntro(true);
@@ -228,26 +107,36 @@ const App = () => {
     }, 3000)
   })
 
+  // stop sorting and reset
+  const stopSorting = () => {
+    setIsSortingRunning(false);
+    setIsRunning(false);
+    setShowIntro(false);
+    setGenerator(null);
+  }
+
   return (
     <div className="App">
       <div className="main-container">
         <Menu 
           show={showMenu}
           setShow={setShowMenu} 
-          onStart={onStart}   
+          onStart={startSorting}   
           onOptionsChange={onOptionsChange}    
           options={options}    
           isRunning={isRunning}
           isShowingIntro={showIntro}
-          onStop={stop}
+          onStop={stopSorting}
           />
         <div className="content">
+
+
           {/* intro */}
+          <IntroDisplay 
+            options={options}
+            showIntro={showIntro && isRunning}
+            />
  
-          <div className={showIntro && isRunning ? "intro intro--show" : "intro"}>
-            <h2 className="intro__headline">{options.sortingAlgorithm.display_name}</h2>
-            <p className="intro__description">{options.sortingAlgorithm.description}</p>
-          </div>
 
           <SortDisplay items={array} />
           
@@ -256,5 +145,13 @@ const App = () => {
     </div>
   );
 }
+
+const IntroDisplay = ({options, showIntro}) => (
+  <div className={showIntro ? "intro intro--show" : "intro"}>
+    <h2 className="intro__headline">{options.sortingAlgorithm.display_name}</h2>
+    <p className="intro__description">{options.sortingAlgorithm.description}</p>
+  </div>
+)
+
 
 export default App;
