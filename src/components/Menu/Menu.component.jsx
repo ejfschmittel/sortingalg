@@ -1,7 +1,9 @@
 import React, {useState, useMemo, useCallback} from "react";
-import {SORT_ALGORITHMS} from "../algorithms"
+import {SORT_ALGORITHMS} from "../../algorithms"
 
-import CustomRangeInput from "./CustomRangeInput/CustomRangeInput.component"
+import CustomRangeInput from "../CustomRangeInput/CustomRangeInput.component"
+
+import "./Menu.styles.scss"
 
 
 const SortingAlgorithmSelect = React.memo(({value, onChange}) => {

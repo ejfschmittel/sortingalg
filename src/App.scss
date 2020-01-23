@@ -1,0 +1,44 @@
+
+
+:root{
+  --main-bg-color: #333;
+  --offset-left: 75%;
+}
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.content{
+  padding-top: 6rem;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+}
+
+
+
+html, body, #root, .App {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+}
+
+.main-container{
+  overflow: auto;
+  background: var(--main-bg-color);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  position: relative;
+}
+
+
+
+

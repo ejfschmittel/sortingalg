@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef, useMemo} from "react"
 
-import '../scss/sort-display.scss';
+import './SortingDisplay.styles.scss';
 // use flex order to positon the items??
 
 // {value: "", position: x}

@@ -2,8 +2,8 @@ import React, {useState, useCallback, useEffect} from 'react';
 import {SORT_ALGORITHMS, getSortingAlgorithm} from "./algorithms"
 
 // components
-import Menu from "./components/Menu.component.jsx";
-import SortingDisplay from "./components/SortingDisplay.component.jsx"
+import Menu from "./components/Menu/Menu.component.jsx";
+import SortingDisplay from "./components/SortingDisplay/SortingDisplay.component.jsx"
 import IntroModal from "./components/IntroModal/IntroModal.component";
 
 // hooks
@@ -11,7 +11,7 @@ import useInterval from "./hooks/useInterval";
 import useArray from "./hooks/useArray";
 
 // scss
-import './scss/main.scss'
+import './App.scss'
 
 
 const MAX_VALUE = 500;
