@@ -26,7 +26,7 @@ function usePrevious(value) {
 const SortDisplay = ({items}) => {
 
     const itemClasses = useMemo(() => {
-        const classes = items.length > 100 ? "sort-display__item sort-display__item--no-border" : "sort-display__item";
+        const classes = items.length > 80  ? "sort-display__item sort-display__item--no-border" : "sort-display__item";
         return classes;
     },[items])
 
