@@ -9,11 +9,10 @@ import IntroModal from "./components/IntroModal/IntroModal.component";
 // hooks
 import useInterval from "./hooks/useInterval";
 import useArray from "./hooks/useArray";
+import useEventListener from "./hooks/useEvenetListener";
 
 // scss
 import './App.scss'
-
-
 
 
 const MAX_COLUMNS_LARGE = 500;
@@ -31,47 +30,21 @@ const defaultOptions = {
   max_columns: MAX_COLUMNS_LARGE,
 }
 
-
-
-
-const useResizeEventListener = (callback, callbackDependencies = []) => {
-  const savedCallback = useRef();
-
-    useEffect(() => {
-      window.addEventListener('resize', callback);
-      return () => {
-        window.removeEventListener('resize', callback);
-      };
-    }, [])
-  
-    // Remember the latest callback.
-    useEffect(() => {
-      savedCallback.current = callback;
-    }, [callback]);
-  
-    useEffect(() => {
-      if (callbackDependencies !== null && callbackDependencies.length !== 0) {
-        window.addEventListener('resize', callback);
-        return () => {
-          window.removeEventListener('resize', callback);
-        };
-      }
-    }, callbackDependencies);
-    
-}
-
 const App = () => {
+  // options, generator
   const [options, setOptions] = useState(defaultOptions)
+  const [generator, setGenerator] = useState(null);
 
-  const [arrayTimeout, setArrayTimeout ] = useState(0)
-
+  // env vars
   const [showMenu, setShowMenu] = useState(true); 
-
   const [isRunning, setIsRunning] = useState(false);
   const [showIntro, setShowIntro] = useState(false);
   const [isSortingRunning, setIsSortingRunning] = useState(false)
-  const [generator, setGenerator] = useState(null);
+ 
+  // used to wait for columns slider to stop moving (for 500ms) before rerendering
+  const [arrayTimeout, setArrayTimeout ] = useState(0)
 
+  // main array can be shuffled, resized and directly set
   const {
     array,
     setArray,
@@ -79,7 +52,9 @@ const App = () => {
     resizeArray,
   } = useArray(options)
 
-  useResizeEventListener(() => {
+  // adds eventlistener to resize
+  // used to control max column count
+  useEventListener('resize',() => {
     if(window.innerWidth >= 1600){
       updateMaxColumns(MAX_COLUMNS_LARGE)
         
@@ -91,7 +66,7 @@ const App = () => {
     }
   }, [options])
 
-
+  // helper method to update max columns
   const updateMaxColumns = (max_size) => {
     if(options.max_columns !== max_size){
       const count = options.count > max_size ? max_size : options.count;
