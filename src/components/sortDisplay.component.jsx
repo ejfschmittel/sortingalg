@@ -1,4 +1,4 @@
-import React from "react"
+import React, {useState, useEffect, useRef, useMemo} from "react"
 
 import '../scss/sort-display.scss';
 // use flex order to positon the items??
@@ -10,40 +10,72 @@ import '../scss/sort-display.scss';
 // make color in correct order reflex rainbow
 // so need function (num) => #255, (num+1) => #256
 
-function getColor(value){
-    //value from 0 to 1
-    var hue=((100-value)*3.6).toString(10);
+function getColor(value, totalItems){
+    var hue=((value/totalItems )*360).toString(10);
     return ["hsl(",hue,",100%,50%)"].join("");
 } 
 
+function usePrevious(value) {
+    const ref = useRef();
+    useEffect(() => {
+      ref.current = value;
+    });
+    return ref.current;
+  }
 
+const SortDisplay = ({items}) => {
 
-const SortDisplay = ({items, count}) => {
+    const itemClasses = useMemo(() => {
+        const classes = items.length > 100 ? "sort-display__item sort-display__item--no-border" : "sort-display__item";
+        return classes;
+    },[items])
+
     return (
         <div className="sort-display">
             {/* render values */}
-            {items.map(({value, position}) => {
-                return <SortItem value={value} position={position} ceil={count}/>
-            })}
+            {items.map((value, index) => {
+                return <Item className={itemClasses} key={index} value={value} position={index} totalItems={items.length}/>
+            })}    
         </div>
     )
 }
 
-const SortItem = ({value, position, ceil}) => {
+// update on height change
+
+// update on position change
+
+// https://stackoverflow.com/questions/54551949/react-hooks-how-do-i-implement-shouldcomponentupdate
+
+
+const Item = React.memo(({value, position, totalItems, className}) => {
+    /*const prevPosition = usePrevious(position);
+    const [pos, setPos] = useState(prevPosition ? prevPosition : position)
 
     // generate color => use memo;
+    useEffect(() => {
+        if(prevPosition && prevPosition !== position){
+            // animate update
 
-    const h = (value / ceil) * 100
+            
+            setPos(position);
+            
+            
+        }else{
+            // normal update
+            setPos(position);
+        }
+        // check on change 
+    }, [position])*/
 
-    const color = getColor(value)
+    const h = useMemo(() => (value / totalItems) * 100, [value, totalItems])
 
-    const classes = ceil > 100 ? "sort-display__item sort-display__item--no-border" : "sort-display__item";
+    const color = useMemo(() => getColor(value, totalItems), [value, totalItems])
 
+  
     return (
-        <div className={classes} style={{order: position, height: `${h}%`, backgroundColor: color}}>
-           
-        </div>
-    )
-}
+        <div className={className} style={{order: position, height: `${h}%`, backgroundColor: color}} />
+    )  
+})
+
 
 export default SortDisplay

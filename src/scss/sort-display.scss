@@ -17,3 +17,17 @@
     }
 }
 
+
+@media only screen and (max-width: 800px) {
+    .sort-display__item{
+        border: none;
+    }
+  }
+  
+
+  @media only screen and (max-width: 500px) {
+    .sort-display__item{
+        margin: 0;
+    }
+  }
+  
