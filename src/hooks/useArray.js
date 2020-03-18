@@ -2,8 +2,6 @@ import {useState, useCallback, useEffect} from "react";
 
 const useArray = (options) => {
     const [array, setArray] = useState([]);
-    //const [arrayTimeout, setArrayTimeout ] = useState(0)
-
 
     useEffect(() => {
         const initalArray = getValueArray(options.count, options.steps)
@@ -28,20 +26,8 @@ const useArray = (options) => {
       }
       setArray([...a]);
     }, [array])
-  
-   
-    // resizes the array: count = new size
-    /*const resizeArray = (count) => {
-      if(arrayTimeout){
-        clearTimeout(arrayTimeout)
-      }
-  
-      setArrayTimeout(setTimeout(() => {
-        const newArray = getValueArray(count, options.steps);
-        setArray(newArray)      
-      }, 500))
-    }*/
 
+    // creates new array with given size
     const resizeArray = (count) => {
       const newArray = getValueArray(count, options.steps);
       setArray(newArray)  

@@ -1,7 +1,8 @@
 import BubbleSort from './BubbleSort';
 import HeapSort from './HeapSort';
 import InsertionSort from './InsertionSort';
-
+import CocktailShakerSort from './CocktailShakerSort';
+import MergeSort from './MergeSort'
 
 export const SORT_ALGORITHMS = {
     HEAP_SORT: {
@@ -18,7 +19,17 @@ export const SORT_ALGORITHMS = {
         display_name: "Insertion Sort",
         value: "insertion_sort",
         description: "Insertion sort is a sorting algorithm in which the elements are transferred one at a time to the right position. In other words, an insertion sort helps in building the final sorted list, one item at a time, with the movement of higher-ranked elements."
-    }
+    },
+    COCKTAIL_SHAKER_SORT: {
+        display_name: "Cocktail Shaker Sort",
+        value: "cocktail_shaker_sort",
+        description: "Quick sort is a highly efficient sorting algorithm and is based on partitioning of array of data into smaller arrays. Quicksort partitions an array and then calls itself recursively twice to sort the two resulting subarrays."
+    },
+    /*MERGE_SORT: {
+        display_name: "Merge Sort",
+        value: "merge_sort",
+        description: "Quick sort is a highly efficient sorting algorithm and is based on partitioning of array of data into smaller arrays. Quicksort partitions an array and then calls itself recursively twice to sort the two resulting subarrays."
+    }*/
 }
 
 
@@ -30,6 +41,10 @@ export const getSortingAlgorithm = (algo_value) => {
             return new BubbleSort();
         case SORT_ALGORITHMS.INSERTION_SORT.value:
             return new InsertionSort();
+        case SORT_ALGORITHMS.COCKTAIL_SHAKER_SORT.value:
+            return new CocktailShakerSort();
+            case SORT_ALGORITHMS.MERGE_SORT.value:
+                return new MergeSort();
         default:
             return new HeapSort();
     }

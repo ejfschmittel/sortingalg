@@ -3,49 +3,32 @@ import SortingAlgorithm from "./SortingAlgorithm"
 class QuickSort extends SortingAlgorithm{
 
 
-    quickSort(arr, left, right){
-        var len = arr.length, 
-        pivot,
-        partitionIndex;
-     
-     
-       if(left < right){
-         pivot = right;
-         partitionIndex = this.partition(arr, pivot, left, right);
-         
-        //sort left and right
-        yield this.quickSort(arr, left, partitionIndex - 1);
-        yield this.quickSort(arr, partitionIndex + 1, right);
-       }
-       return arr;
-     }
-
-     partition(arr, pivot, left, right){
-        var pivotValue = arr[pivot],
-            partitionIndex = left;
-     
-        for(var i = left; i < right; i++){
-         if(arr[i] < pivotValue){
-           this.swap(arr, i, partitionIndex);
-           partitionIndex++;
-         }
-       }
-       this.swap(arr, right, partitionIndex);
-       return partitionIndex;
-     }
-
-     swap(arr, i, j){
-        var temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
-     }
-       
-
 
     * getGenerator(arr){ 
-        yield quickSort(arr, left, right);
-        return arr;
+        var length = arr.length;
+      
+        if (length <= 1) {
+          return arr;
+        }
+        var PIVOT = arr[0];
+        var GREATER = [];
+        var LESSER = [];
+      
+        for (var i = 1; i < length; i++) {
+          if (arr[i] > PIVOT) {
+            GREATER.push(arr[i]);
+          } else {
+            LESSER.push(arr[i]);
+          }
+        }
+      
+        var sorted = quickSort(LESSER);
+        sorted.push(PIVOT);
+        sorted = sorted.concat(quickSort(GREATER));
+        
+        return sorted;
+      }
     }
 }
 
-export default InsertionSort;
+export default QuickSort;

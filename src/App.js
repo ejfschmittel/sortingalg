@@ -1,4 +1,4 @@
-import React, {useRef, useState, useCallback, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {SORT_ALGORITHMS, getSortingAlgorithm} from "./algorithms"
 
 // components
@@ -9,24 +9,22 @@ import IntroModal from "./components/IntroModal/IntroModal.component";
 // hooks
 import useInterval from "./hooks/useInterval";
 import useArray from "./hooks/useArray";
-import useEventListener from "./hooks/useEvenetListener";
+import useEventListener from "./hooks/useEventListener";
 
-// scss
+
 import './App.scss'
 
-
+// max column defualt steps
 const MAX_COLUMNS_LARGE = 500;
 const MAX_COLUMNS_MEDIUM = 200;
 const MAX_COLUMNS_SMALL = 100;
-// https://github.com/rafeautie/sorting-algorithm-visualizer
-// https://github.com/decadentjs/sorting-algorithms/blob/master/src/sorter.js+
 
 
 const defaultOptions = {
-  sortingAlgorithm: SORT_ALGORITHMS.HEAP_SORT,
+  sortingAlgorithm: SORT_ALGORITHMS.COCKTAIL_SHAKER_SORT,
   count: 50,
   steps: 1,
-  speed: 200, //ms
+  delay: 200, //ms
   max_columns: MAX_COLUMNS_LARGE,
 }
 
@@ -52,21 +50,33 @@ const App = () => {
     resizeArray,
   } = useArray(options)
 
-  // adds eventlistener to resize
-  // used to control max column count
+
+
+  // set max columns on mount
+  useEffect(() => {
+    setMaxColumnsByWindowWidth()
+  }, [])
+
+  // resize event listener to reevalute max columns
   useEventListener('resize',() => {
+    setMaxColumnsByWindowWidth()
+  }, [options])
+
+  // sets the max columns base on window size
+  const setMaxColumnsByWindowWidth = () => {
+    console.log("resize")
     if(window.innerWidth >= 1600){
       updateMaxColumns(MAX_COLUMNS_LARGE)
         
-    }else if(window.innerWidth >= 800){
+    }else if(window.innerWidth >= 900){
       updateMaxColumns(MAX_COLUMNS_MEDIUM)
         
     }else{
       updateMaxColumns(MAX_COLUMNS_SMALL)
     }
-  }, [options])
+  }
 
-  // helper method to update max columns
+
   const updateMaxColumns = (max_size) => {
     if(options.max_columns !== max_size){
       const count = options.count > max_size ? max_size : options.count;
@@ -80,10 +90,8 @@ const App = () => {
   // main loop for sorting
   // calls generator sorting function to get next array 
   useInterval(() => {
-   
     if(generator && isRunning){
       const res = generator.next(); 
-     
       if(!res.done){
         const newArray = res.value;  
         setArray([...newArray]);
@@ -93,7 +101,7 @@ const App = () => {
     }else{
       stopSorting();
     }
-  }, isSortingRunning ? options.speed : null)
+  }, isSortingRunning ? options.delay : null)
 
   // on Change function for options
   const onOptionsChange = (e) => {
@@ -117,6 +125,8 @@ const App = () => {
     setOptions({...newObject})
   }
 
+  // delays array resize until 500ms since last resize 
+  // used for slider value to avoid unnecessary resizes
   const delayedArrayResize = (count) => {
     if(arrayTimeout){
       clearTimeout(arrayTimeout)
@@ -127,7 +137,7 @@ const App = () => {
     }, 500))
   }
 
-  const startSorting = useCallback(() => {
+  const startSorting = () => {
     // hide menu / start intro / set running
     setShowMenu(false);
     setShowIntro(true);
@@ -151,7 +161,7 @@ const App = () => {
       // start interval
       setIsSortingRunning(true);     
     }, 3000)
-  })
+  }
 
   // stop sorting and reset
   const stopSorting = () => {

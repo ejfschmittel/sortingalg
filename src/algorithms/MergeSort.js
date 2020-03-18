@@ -1,31 +1,55 @@
 import SortingAlgorithm from "./SortingAlgorithm"
 
 class MergeSort extends SortingAlgorithm{
-    * getGenerator(arr){
-        for (let i = 1; i < arr.length; i++) {
-            let idx = i;
-            while (idx > 0 && arr[idx] < arr[idx - 1]) {
-                let lineBeforeCurrent = arr[idx - 1];
-                arr[idx - 1] = arr[idx];
-                arr[idx] = lineBeforeCurrent;
-                yield arr;
-                idx--
+
+
+     * merge(list1, list2) {
+        var results = [];
+      
+        while(list1.length && list2.length) {
+          if (list1[0] <= list2[0]) {
+            results.push(list1.shift());
+          } else {
+            results.push(list2.shift());
+          }
+        }
+
+      
+        return results.concat(list1, list2);
+
+    }
+
+    * mergeSort(arr, restOfList, first){
+        if (arr.length < 2) return arr;
+
+        var listHalf = Math.floor(arr.length/2);
+        var subList1 = arr.slice(0, listHalf);
+        var subList2 = arr.slice(listHalf, arr.length);
+
+        const merged = this.merge(this.mergeSort(subList1, subList2, true), this.mergeSort(subList2, subList1, false));
+        
+        // how to get full list
+        if(!restOfList)
+            yield* merged;
+        else{
+            if(first){
+                yield* merged.concat(restOfList) 
+            }else{
+                yield* restOfList.concat(this.merge)
             }
         }
-        return arr;
+          
+           
+
+
+        return merged;
+    }
+
+    * getGenerator(arr) {
+        const newArr = this.mergeSort(arr, null)  
+        yield newArr
+        return newArr;  
     }
 }
 
-export default InsertionSort;
-
-
-const mergeSort = function* (array, l, r) {
-    if (l < r) {
-      let m = Math.floor(l + (r - l) / 2);
-  
-      yield* mergeSort(array, l, m);
-      yield* mergeSort(array, m + 1, r);
-  
-      yield* merge(array, l, m, r);
-    }
-  }
+export default MergeSort;

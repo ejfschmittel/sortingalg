@@ -16,7 +16,7 @@ class HeapSort extends SortingAlgorithm{
             max = right;
         }
     
-        if (max != i) {
+        if (max !== i) {
              this.swap(input, i, max);
              this.heap_root(input, max);
         }
@@ -51,11 +51,3 @@ class HeapSort extends SortingAlgorithm{
 
 export default HeapSort;
 
-/*
-    use a callback function that can be placed anywher 
-
-    getSortingAlgo => new HeapSort(() => {
-
-    }).run();
-
-*/

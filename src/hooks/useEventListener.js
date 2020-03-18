@@ -8,7 +8,7 @@ const useEventListener = (type, callback, callbackDependencies = []) => {
         return () => {
           window.removeEventListener(type, callback);
         };
-      }, [])
+      }, [type, callback])
     
       // Remember the latest callback.
       useEffect(() => {
@@ -22,8 +22,9 @@ const useEventListener = (type, callback, callbackDependencies = []) => {
             window.removeEventListener(type, callback);
           };
         }
-      }, callbackDependencies);
+      }, [...callbackDependencies]);
       
   }
 
   export default useEventListener;
+
