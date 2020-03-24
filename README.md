@@ -2,7 +2,7 @@ A simple webapp to visualise sorting algorithms written in React.
 
 Demo: https://sorting-algorithm-visualizer.herokuapp.com/
 
-<img src="public/demo_screenshot.png">
+<img src="public/demo_screenshot.PNG">
 
 ### Installation 
 
